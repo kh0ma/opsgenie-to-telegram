@@ -1,11 +1,11 @@
 package io.github.kh0ma.opsgenie_to_telegram.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,11 +44,14 @@ public class ProxyController {
             @RequestHeader("x-telegram-chat-id") String chatId,
             @RequestHeader("x-telegram-bot-token") String botToken,
             @RequestBody JsonNode requestPayload
-    ) throws JsonProcessingException {
+    ) {
         String action = requestPayload.get("action").asText();
         String alertMessage = requestPayload.get("alert").get("message").asText();
         String alertId = requestPayload.get("alert").get("alertId").asText();
-        String description = requestPayload.get("alert").get("description").asText();
+        String description = StringUtils.defaultIfEmpty(
+                requestPayload.get("alert").get("description").asText(),
+                "no description"
+        );
 
         RestTemplate restTemplate = new RestTemplate();
         String telegramApiUrl = "https://api.telegram.org/bot" + botToken + "/sendMessage";
