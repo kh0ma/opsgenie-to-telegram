@@ -34,6 +34,6 @@ jobs:
         # Push is a shorthand for --output=type=registry
         push: true # optional, default is false
         # List of tags
-        tags: kh0ma/opsgenie-to-telegram:latest # optional
+        tags: kh0ma/opsgenie-to-telegram:latest kh0ma/opsgenie-to-telegram:${{github.run_id}}.${{github.run_number}}.${{github.run_attempt}}-${{github.ref_name}} # optional
 
           
